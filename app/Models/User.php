@@ -7,10 +7,11 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Grimzy\LaravelMysqlSpatial\Eloquent\SpatialTrait;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SpatialTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -24,9 +25,12 @@ class User extends Authenticatable implements JWTSubject
         'tagline',
         'about',
         'username',
-        'location',
         'formated_address',
         'available_to_bire'
+    ];
+
+    protected $spatialFields = [
+        'location',
     ];
 
     /**
