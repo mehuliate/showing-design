@@ -2,6 +2,9 @@
 
 namespace App\Exceptions;
 
+use Exception;
+use Illuminate\Exceptions\CustomException;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -32,6 +35,10 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        //
+        $this->renderable(function (CustomException $e, $request) {
+            return response()->json(["errors" => [
+                "message" => "You are not authorized to access this resource"
+            ]], 403);
+        });
     }
 }
