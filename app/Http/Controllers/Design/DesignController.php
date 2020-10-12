@@ -6,15 +6,33 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\DesignResource;
 use Illuminate\Http\Request;
 use App\Models\Design;
+use App\Repositories\Contracts\IDesign;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class DesignController extends Controller
 {
+    protected $designs;
+
+    public function __construct(IDesign $designs)
+    {
+        $this->designs = $designs;
+    }
+    public function index(){
+        $design = $this->designs->all();
+        return DesignResource::collection($design);
+    }
+
+    public function findDesign($id)
+    {
+        $design = $this->designs->find($id);
+        return new DesignResource($design);
+    }
+
     public function update(Request $request, $id)
     {
 
-        $design = Design::find($id);
+        $design = $this->designs->find($id);
 
         $this->authorize('update', $design);
 
@@ -25,7 +43,7 @@ class DesignController extends Controller
         ]);
 
 
-        $design->update([
+        $design = $this->designs->update($id,[
             'title' => $request->title,
             'description' => $request->description,
             'slug' => Str::slug($request->title),
@@ -33,16 +51,16 @@ class DesignController extends Controller
         ]);
 
         // apply the tags
-        // $this->designs->applyTags($id, $request->tags);
+        $this->designs->applyTags($id, $request->tags);
 
-        $design->retag($request->tags);
+        // $design->retag($request->tags);
 
         return new DesignResource($design);
     }
 
     public function destroy($id)
     {
-        $design = Design::findOrFail($id);
+        $design = $this->designs->find($id);
         $this->authorize('delete', $design);
 
         // delete the files associated to the record
@@ -53,7 +71,7 @@ class DesignController extends Controller
             }
         }
 
-        $design->delete();
+        $this->designs->delete();
 
         return response()->json(['message' => 'Record deleted'], 200);
     }

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use App\Models\User;
+use App\Repositories\Contracts\IUser;
 use Illuminate\Auth\Events\Verified;
 
 class VerificationController extends Controller
@@ -31,17 +32,18 @@ class VerificationController extends Controller
      * @var string
      */
     // protected $redirectTo = RouteServiceProvider::HOME;
-
+    protected $users;
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(IUser $users)
     {
         // $this->middleware('auth');
         // $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
+        $this->users = $users;
     }
 
     public function verify(Request $request, User $user){
@@ -83,7 +85,7 @@ class VerificationController extends Controller
             'email' => ['email', 'required']
         ]);
         
-        $user = User::where('email', $request->email)->first();
+        $user = $this->users->findWhereFirst('email', $request->email)->first();
 
         //if no user
         if (! $user) {

@@ -9,10 +9,18 @@ use App\Http\Controllers\Design\DesignController;
 use App\Http\Controllers\Design\UploadController;
 use App\Http\Controllers\MeController;
 use App\Http\Controllers\User\SettingController;
+use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 //Public routes
 Route::get('me', MeController::class);
+
+// designs
+Route::get('designs', [DesignController::class, 'index']);
+Route::get('designs/{id}', [DesignController::class, 'findDesign']);
+
+//users
+Route::get('users', [UserController::class, 'index']);
 
 Route::get('test', function () {
     phpinfo();
