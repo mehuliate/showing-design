@@ -7,6 +7,7 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Repositories\Contracts\IUser;
+use App\Repositories\Eloquent\Criteria\EagerLoad;
 
 class UserController extends Controller
 {
@@ -16,8 +17,11 @@ class UserController extends Controller
     {
         $this->users = $users;
     }
-    public function index(){
-        $users = $this->users->all();
+    public function index()
+    {
+        $users = $this->users->withCriteria([
+            new EagerLoad(['designs'])
+        ])->all();
         return UserResource::collection($users);
     }
 }
