@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\Design\CommentController;
 use App\Http\Controllers\Design\DesignController;
 use App\Http\Controllers\Design\UploadController;
 use App\Http\Controllers\MeController;
@@ -37,6 +38,11 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::put('designs/{id}', [DesignController::class, 'update']);
     Route::delete('designs/{id}', [DesignController::class, 'destroy']);
+
+    //comments
+    Route::post('designs/{id}/comments', [CommentController::class, 'store']);
+    Route::put('comments/{id}', [CommentController::class, 'update']);
+    Route::delete('comments/{id}', [CommentController::class, 'destroy']);
 });
 
 //Routes for guests only
