@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Likeable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -9,7 +10,7 @@ use Cviebrock\EloquentTaggable\Taggable;
 
 class Design extends Model
 {
-    use HasFactory, Taggable;
+    use HasFactory, Taggable, Likeable;
 
     protected $fillable = [
         'user_id',
@@ -48,9 +49,5 @@ class Design extends Model
     {
         return $this->morphMany(Comment::class, 'commentable')
             ->orderBy('created_at', 'asc');
-    }
-
-    public function likes()
-    {
     }
 }
