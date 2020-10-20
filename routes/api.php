@@ -22,12 +22,20 @@ Route::get('me', MeController::class);
 // designs
 Route::get('designs', [DesignController::class, 'index']);
 Route::get('designs/{id}', [DesignController::class, 'findDesign']);
+Route::get('designs/slug/{slug}', [DesignController::class, 'findBySlug']);
 
 //users
 Route::get('users', [UserController::class, 'index']);
+Route::get('users/{username}', [UserController::class, 'findByUsername']);
+Route::get('users/{id}/designs', [DesignController::class, 'getForUser']);
 
 //Team
 Route::get('team/slug/{slug}', [TeamsController::class, 'findBySlug']);
+Route::get('team/{id}/designs', [DesignController::class, 'getForTeam']);
+
+//Search
+Route::get('search/designs', [DesignController::class, 'search']);
+Route::get('search/designers', [UserController::class, 'search']);
 
 // Route group for authenticated users only
 Route::group(['middleware' => ['auth:api']], function () {

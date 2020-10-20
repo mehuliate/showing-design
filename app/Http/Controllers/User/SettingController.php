@@ -34,7 +34,7 @@ class SettingController extends Controller
 
         $location = new Point($request->location['latitude'], $request->location['longitude']);
 
-        $user= $this->users->update([
+        $user = $this->users->update(auth()->id(), [
             'name' => $request->name,
             'formatted_address' => $request->formatted_address,
             'location' => $location,
