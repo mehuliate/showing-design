@@ -61,7 +61,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('teams', [TeamsController::class, 'store']);
     Route::get('teams/{id}', [TeamsController::class, 'findById']);
     Route::get('teams', [TeamsController::class, 'index']);
-    Route::get('users/teams', [TeamsController::class, 'fetchUserTeams']);
+    Route::get('teams/user/teams', [TeamsController::class, 'fetchUserTeams']);
     Route::put('teams/{id}', [TeamsController::class, 'update']);
     Route::delete('teams/{id}', [TeamsController::class, 'destroy']);
     Route::delete('teams/{team_id}/users/{user_id}', [TeamsController::class, 'removeFromTeam']);

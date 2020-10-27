@@ -41,18 +41,19 @@ class LoginController extends Controller
     //     $this->middleware('guest')->except('logout');
     // }
 
-    public function attemptLogin(Request $request){
+    public function attemptLogin(Request $request)
+    {
         // attemptto issue a token to the user base on the login credentials
         $token = $this->guard()->attempt($this->credentials($request));
 
-        if (! $token) {
+        if (!$token) {
             return false;
         }
 
         //get the authenticated user
         $user = $this->guard()->user();
 
-        if ($user instanceof MustVerifyEmail && ! $user->hasVerifiedEmail()) {
+        if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
             return false;
         }
 
@@ -76,30 +77,28 @@ class LoginController extends Controller
             'token_type' => 'bearer',
             'expires_in' => $expiration
         ]);
-
     }
 
     protected function sendFailedLoginResponse(Request $request)
     {
         $user = $this->guard()->user();
 
-        if ($user instanceof MustVerifyEmail && ! $user->hasVerifiedEmail()) {
+        if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
             return response()->json([
                 'errors' => [
-                    'verification' => 'You need to verify your email account'
+                    'message' => 'You need to verify your email account'
                 ]
-            ]);
+            ], 422);
         }
 
         throw ValidationException::withMessages([
             $this->username() => 'Invalid credentials'
         ]);
-        
     }
 
-    public function logout(){
+    public function logout()
+    {
         $this->guard()->logout();
         return response()->json(['message' => 'Logout out successfully!']);
     }
-
 }

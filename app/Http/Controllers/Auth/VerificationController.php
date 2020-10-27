@@ -46,9 +46,10 @@ class VerificationController extends Controller
         $this->users = $users;
     }
 
-    public function verify(Request $request, User $user){
+    public function verify(Request $request, User $user)
+    {
         //check if the url is a valid signed url
-        if(! URL::hasValidSignature($request)){
+        if (!URL::hasValidSignature($request)) {
             return response()->json(
                 [
                     "errors" => [
@@ -60,7 +61,7 @@ class VerificationController extends Controller
         }
 
         //check if the user has already verified account
-        if($user->hasVerifiedEmail()){
+        if ($user->hasVerifiedEmail()) {
             return response()->json(
                 [
                     "errors" => [
@@ -76,22 +77,26 @@ class VerificationController extends Controller
         event(new Verified($user));
 
         return response()->json(
-            ['message' => 'Email successfully verified'], 200
+            ['message' => 'Email successfully verified'],
+            200
         );
     }
-    
-    public function resend(Request $request){
+
+    public function resend(Request $request)
+    {
         $this->validate($request, [
             'email' => ['email', 'required']
         ]);
-        
-        $user = $this->users->findWhereFirst('email', $request->email)->first();
+
+        // $user = $this->users->findWhereFirst('email', $request->email);
+        $user = User::where('email', $request->email)->first();
+
 
         //if no user
-        if (! $user) {
+        if (!$user) {
             return response()->json(
                 ["errors" => [
-                    "email" => "No user could be found with this email address"
+                    "message" => "No user could be found with this email address"
                 ]],
                 422
             );
